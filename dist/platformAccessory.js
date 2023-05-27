@@ -45,8 +45,8 @@ class FanAccessory {
             .onSet(this.setFanOn.bind(this))
             .onGet(() => Promise.resolve(this.states.FanSpeed));
         this.fanService.getCharacteristic(this.platform.Characteristic.On)
-            .onSet(this.setFanOff.bind(this));
-        //.onGet(() => Promise.resolve(this.states.FanOn));
+            .onSet(this.setFanOff.bind(this))
+            .onGet(() => Promise.resolve(this.states.FanOn));
     }
     async setLightOn(value) {
         let lightWasOn = this.states.LightOn;
@@ -78,10 +78,12 @@ class FanAccessory {
         this.platform.log.debug('The fan is set to: ', value);
     }
     async setFanOff(value) {
+        if (!value) {
+            this.port.write(getButtonCodes("fanOff"));
+            this.states.FanOn = false;
+            this.platform.log.debug('The fan is turned off (set to 0% fan speed)');
+        }
         this.states.FanOn = value;
-        this.port.write(getButtonCodes("fanOff"));
-        this.states.FanOn = false;
-        this.platform.log.debug('The fan is turned off (set to 0% fan speed)');
     }
 }
 exports.FanAccessory = FanAccessory;
