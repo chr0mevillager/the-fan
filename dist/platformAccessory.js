@@ -16,14 +16,12 @@ class FanAccessory {
     constructor(platform, accessory) {
         this.platform = platform;
         this.accessory = accessory;
-        //private batteryService: Service;
         this.states = {
             LightOn: false,
             FanSpeed: 0,
-            //BatteryLevel: 100,
         };
         //Open serial port to send updates
-        this.port = new serialport_1.SerialPort({ path: '/dev/ttyUSB0', baudRate: 9600 });
+        this.port = new serialport_1.SerialPort({ path: '/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0', baudRate: 9600 });
         // set accessory information
         this.accessory.getService(this.platform.Service.AccessoryInformation)
             .setCharacteristic(this.platform.Characteristic.Manufacturer, "S.Q.M CO., LTD.")
@@ -33,7 +31,6 @@ class FanAccessory {
         // you can create multiple services for each accessory
         this.lightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb, "Lightbulb", "0");
         this.fanService = this.accessory.getService(this.platform.Service.Fan) || this.accessory.addService(this.platform.Service.Fan, "Fan", "1");
-        //this.batteryService = this.accessory.getService(this.platform.Service.Battery) || this.accessory.addService(this.platform.Service.Battery, "Battery", "2");
         // set the service name, this is what is displayed as the default name on the Home app
         // in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
         this.lightService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
@@ -46,20 +43,6 @@ class FanAccessory {
         this.fanService.getCharacteristic(this.platform.Characteristic.RotationSpeed)
             .onSet(this.setFanOn.bind(this))
             .onGet(() => Promise.resolve(this.states.FanSpeed));
-        /*
-        this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel)
-            .onGet(() => Promise.resolve(this.states.BatteryLevel));
-        this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel)
-            .onGet(() => Promise.resolve(this.states.BatteryLevel));
-
-        setInterval(() => {
-            // push the new value to HomeKit
-            this.batteryService.updateCharacteristic(this.platform.Characteristic.BatteryLevel, 4);
-
-            this.platform.log.debug('Battery level: ', 4);
-            this.batteryService.updateCharacteristic(this.platform.Characteristic.StatusLowBattery, !(this.platform.Characteristic.BatteryLevel as any as number < 5))
-        }, 10000); //86400000
-        */
     }
     async setLightOn(value) {
         let lightWasOn = this.states.LightOn;

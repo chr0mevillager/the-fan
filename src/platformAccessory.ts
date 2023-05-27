@@ -30,7 +30,7 @@ export class FanAccessory {
 	) {
 
 		//Open serial port to send updates
-		this.port = new SerialPort({ path: '/dev/ttyUSB0', baudRate: 9600 });
+		this.port = new SerialPort({ path: '/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0', baudRate: 9600 });
 
 		// set accessory information
 		this.accessory.getService(this.platform.Service.AccessoryInformation)!
