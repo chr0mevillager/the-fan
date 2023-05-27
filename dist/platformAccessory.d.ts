@@ -10,5 +10,6 @@ export declare class FanAccessory {
     constructor(platform: ExampleHomebridgePlatform, accessory: PlatformAccessory);
     setLightOn(value: CharacteristicValue): Promise<void>;
     setFanOn(value: CharacteristicValue): Promise<void>;
+    setFanOff(value: CharacteristicValue): Promise<void>;
 }
 //# sourceMappingURL=platformAccessory.d.ts.map

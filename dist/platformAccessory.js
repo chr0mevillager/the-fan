@@ -19,6 +19,7 @@ class FanAccessory {
         this.states = {
             LightOn: false,
             FanSpeed: 0,
+            FanOn: false,
         };
         //Open serial port to send updates
         this.port = new serialport_1.SerialPort({ path: '/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0', baudRate: 9600 });
@@ -43,6 +44,9 @@ class FanAccessory {
         this.fanService.getCharacteristic(this.platform.Characteristic.RotationSpeed)
             .onSet(this.setFanOn.bind(this))
             .onGet(() => Promise.resolve(this.states.FanSpeed));
+        this.fanService.getCharacteristic(this.platform.Characteristic.On)
+            .onSet(this.setFanOff.bind(this));
+        //.onGet(() => Promise.resolve(this.states.FanOn));
     }
     async setLightOn(value) {
         let lightWasOn = this.states.LightOn;
@@ -53,20 +57,31 @@ class FanAccessory {
         this.platform.log.debug('The light is now on: ', this.states.LightOn);
     }
     async setFanOn(value) {
-        this.states.FanSpeed = value;
+        if (value != 0)
+            this.states.FanSpeed = value;
         if (this.states.FanSpeed == 0) {
+            this.states.FanOn = false;
             this.port.write(getButtonCodes("fanOff"));
         }
         else if (this.states.FanSpeed > 0 && this.states.FanSpeed <= 33) {
+            this.states.FanOn = true;
             this.port.write(getButtonCodes("lowFanSpeed"));
         }
         else if (this.states.FanSpeed > 33 && this.states.FanSpeed <= 67) {
+            this.states.FanOn = true;
             this.port.write(getButtonCodes("mediumFanSpeed"));
         }
         else if (this.states.FanSpeed > 67 && this.states.FanSpeed <= 100) {
+            this.states.FanOn = true;
             this.port.write(getButtonCodes("highFanSpeed"));
         }
         this.platform.log.debug('The fan is set to: ', value);
+    }
+    async setFanOff(value) {
+        this.states.FanOn = value;
+        this.port.write(getButtonCodes("fanOff"));
+        this.states.FanOn = false;
+        this.platform.log.debug('The fan is turned off (set to 0% fan speed)');
     }
 }
 exports.FanAccessory = FanAccessory;
