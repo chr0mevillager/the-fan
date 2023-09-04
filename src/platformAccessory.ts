@@ -41,26 +41,29 @@ export class FanAccessory {
 
 		// get the LightBulb service if it exists, otherwise create a new LightBulb service
 		// you can create multiple services for each accessory
-		this.lightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb, "Lightbulb", "0");
-		this.fanService = this.accessory.getService(this.platform.Service.Fan) || this.accessory.addService(this.platform.Service.Fan, "Fan", "1");
 
 		// set the service name, this is what is displayed as the default name on the Home app
 		// in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
-		this.lightService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
+
+		this.fanService = this.accessory.getService(this.platform.Service.Fan) || this.accessory.addService(this.platform.Service.Fan, "Fan", "1");
 		this.fanService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
+
+		this.lightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb, "Lightbulb", "0");
+		this.lightService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
+
 
 		//this.batteryService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
 
 		// register handlers for the On/Off Characteristic
-		this.lightService.getCharacteristic(this.platform.Characteristic.On)
-			.onSet(this.setLightOn.bind(this))
-			.onGet(() => Promise.resolve(this.states.LightOn));
 		this.fanService.getCharacteristic(this.platform.Characteristic.RotationSpeed)
 			.onSet(this.setFanOn.bind(this))
 			.onGet(() => Promise.resolve(this.states.FanSpeed));
 		this.fanService.getCharacteristic(this.platform.Characteristic.On)
 			.onSet(this.setFanOff.bind(this))
 			.onGet(() => Promise.resolve(this.states.FanOn));
+		this.lightService.getCharacteristic(this.platform.Characteristic.On)
+			.onSet(this.setLightOn.bind(this))
+			.onGet(() => Promise.resolve(this.states.LightOn));
 
 	}
 	async setLightOn(value: CharacteristicValue) {
