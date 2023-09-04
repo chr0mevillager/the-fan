@@ -46,10 +46,10 @@ export class FanAccessory {
 		// set the service name, this is what is displayed as the default name on the Home app
 		// in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
 
-		this.fanService = this.accessory.getService(this.platform.Service.Fan) || this.accessory.addService(this.platform.Service.Fan, "Fan", "1");
+		this.fanService = this.accessory.getService(this.platform.Service.Fan) || this.accessory.addService(this.platform.Service.Fan, "Fan", "0");
 		this.fanService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
 
-		this.lightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb, "Lightbulb", "0");
+		this.lightService = this.accessory.getService(this.platform.Service.Lightbulb) || this.accessory.addService(this.platform.Service.Lightbulb, "Lightbulb", "1");
 		this.lightService.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.exampleDisplayName);
 
 
