@@ -37,7 +37,8 @@ export class FanAccessory {
 		this.accessory.getService(this.platform.Service.AccessoryInformation)!
 			.setCharacteristic(this.platform.Characteristic.Manufacturer, "S.Q.M CO., LTD.")
 			.setCharacteristic(this.platform.Characteristic.Model, "SW1422 MBK")
-			.setCharacteristic(this.platform.Characteristic.SerialNumber, "NO4407600265-3923");
+			.setCharacteristic(this.platform.Characteristic.SerialNumber, "NO4407600265-3923")
+			.setCharacteristic(this.platform.Characteristic.Version, "1.5");
 
 		// get the LightBulb service if it exists, otherwise create a new LightBulb service
 		// you can create multiple services for each accessory
